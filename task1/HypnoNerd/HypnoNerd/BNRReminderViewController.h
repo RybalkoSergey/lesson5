@@ -1,5 +1,5 @@
 //
-//  ViewController.h
+//  BNRReminderViewController.h
 //  HypnoNerd
 //
 //  Created by Sergey Rybalko on 11/6/15.
@@ -8,8 +8,6 @@
 
 #import <UIKit/UIKit.h>
 
-@interface ViewController : UIViewController
-
+@interface BNRReminderViewController : UIViewController
 
 @end
-
