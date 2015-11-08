@@ -13,6 +13,8 @@
 @property (nonatomic, readwrite) NSInteger score;
 @property (nonatomic, strong) NSMutableArray *cards;
 
+- (BOOL)hasMachedCard:(Card *)choosenCard;
+
 @end
 
 
@@ -57,9 +59,12 @@ static const int COST_TO_CHOOSE = 1;
 	if (!card.isMatched) {
 		if (card.isChosen) {
 			card.chosen = NO;
+            self.currentAction = [NSString stringWithFormat:@"Close card %@", card.contents];
 		} else {
 			NSMutableArray *chosenCards = [[NSMutableArray alloc] init];
 			
+            self.currentAction = [NSString stringWithFormat:@"Open card %@", card.contents];
+            
 			for (Card *otherCard in self.cards) {
 				if (otherCard.isChosen && !otherCard.isMatched) {
 					[chosenCards addObject:otherCard];
@@ -75,6 +80,7 @@ static const int COST_TO_CHOOSE = 1;
 					card.matched = YES;
 					for (Card *otherCard in chosenCards) {
 						otherCard.matched = YES;
+                        self.currentAction = [NSString stringWithFormat:@"Cards %@ and %@ mached!!!", card.contents, otherCard.contents];
 					}
 				} else {
 					int penalty = MISMATCH_PENALTY;
@@ -84,16 +90,39 @@ static const int COST_TO_CHOOSE = 1;
 					card.chosen = YES;
 					for (Card *otherCard in chosenCards) {
 						otherCard.chosen = NO;
+                        self.currentAction = [NSString stringWithFormat:@"Cards %@ and %@ not mached", card.contents, otherCard.contents];
 					}
+                    
 				}
 			} else {
 				self.score -= COST_TO_CHOOSE;
 				card.chosen = YES;
+                
 			}
+            
+            if (![self hasMachedCard:card]) {
+                self.currentAction = [NSString stringWithFormat:@"Game over"];
+            }
 		}
 	}
 }
 
+- (BOOL)hasMachedCard:(Card *)choosenCard {
+    NSMutableArray *closeCards = [[NSMutableArray alloc] init];
+    for (Card *card in self.cards) {
+        if (!card.isChosen && !card.isMatched) {
+            [closeCards addObject:card];
+        }
+    }
+    
+    for (Card *closeCard in closeCards) {
+        if ([choosenCard match:@[closeCard]]) {
+            return YES;
+        }
+    }
+    
+    return NO;
+}
 
 - (Card *)cardAtIndex:(NSUInteger)index {
 	return (index < [self.cards count]) ? self.cards[index] : nil;

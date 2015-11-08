@@ -15,6 +15,8 @@
 
 @property (nonatomic, strong) Game *game;
 @property (strong, nonatomic) IBOutletCollection(UIButton) NSArray *cardButtons;
+@property (weak, nonatomic) IBOutlet UILabel *resultLabel;
+@property (weak, nonatomic) IBOutlet UILabel *logLabel;
 
 @end
 
@@ -32,8 +34,11 @@
 - (IBAction)cardButtonTapped:(UIButton *)sender {
 	NSUInteger cardIndex = [self.cardButtons indexOfObject:sender];
 	[self.game chooseCardAtIndex:cardIndex];
-	
-	[self updateUI];
+    
+    self.resultLabel.text = [NSString stringWithFormat:@"Your result: %li", (long)[self.game score]];
+    self.logLabel.text = [NSString stringWithFormat:@"Log: %@", self.game.currentAction];
+    
+    [self updateUI];
 }
 
 
