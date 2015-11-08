@@ -10,6 +10,10 @@
 
 #import "Deck.h"
 
+@protocol MainViewDelegate <NSObject>
+@required
+- (void) showGameOverWindow;
+@end
 
 @interface Game : UIView
 
@@ -19,6 +23,7 @@
 - (void)chooseCardAtIndex:(NSUInteger)index;
 - (Card *)cardAtIndex:(NSUInteger)index;
 
+@property (nonatomic, strong) id <MainViewDelegate> mainViewDelegate;
 @property (nonatomic, readonly) NSInteger score;
 @property (nonatomic, strong) NSString* currentAction;
 

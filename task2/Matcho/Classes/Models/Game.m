@@ -7,6 +7,7 @@
 //
 
 #import "Game.h"
+#import "GameOverViewController.h"
 
 @interface Game ()
 
@@ -57,7 +58,11 @@ static const int COST_TO_CHOOSE = 1;
 	Card *card = [self cardAtIndex:index];
 	
 	if (!card.isMatched) {
-		if (card.isChosen) {
+
+//        [self.mainViewDelegate openGameOverView];
+//        return;
+//        
+        if (card.isChosen) {
 			card.chosen = NO;
             self.currentAction = [NSString stringWithFormat:@"Close card %@", card.contents];
 		} else {
@@ -102,9 +107,12 @@ static const int COST_TO_CHOOSE = 1;
             
             if (![self hasMachedCard:card]) {
                 self.currentAction = [NSString stringWithFormat:@"Game over"];
+                [self.mainViewDelegate showGameOverWindow];
             }
 		}
 	}
+    
+//    [self.mainViewDelegate openGameOverView];
 }
 
 - (BOOL)hasMachedCard:(Card *)choosenCard {
